@@ -3,6 +3,7 @@ import './App.css';
 
 import Noise from './Noise';
 import noisyLine from './noisyLine';
+import Hill from './Hill';
 
 import Context from './Context';
 
@@ -70,7 +71,16 @@ class App extends Component {
 	const { width, height } = this.state;
 	const ctx = Context.get();
 
-	ctx.fillStyle = "#000000";
+	const light = '#b9c3d0';
+	const dark = '#678bbb';
+
+	const grd = ctx.createLinearGradient(0, height, 0, 0);
+	grd.addColorStop(0, light);
+	grd.addColorStop(.4, light);
+	grd.addColorStop(.75, dark);
+	grd.addColorStop(1, dark);
+	
+	ctx.fillStyle = grd;
 	ctx.fillRect(0, 0, width, height);
     }
 
@@ -83,14 +93,49 @@ class App extends Component {
     scale( value, r1, r2 ) { 
 	return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
     }
-    
+
     drawLine() {
+	const { width, height } = this.state;
+	const interval = Math.floor(height / 10);
+
+	const hillCount = 5;
+	
+	const ir = 106;
+	const mr = Math.floor(ir / (hillCount + 1));
+	const ig = 121;
+	const mg = Math.floor(ig / (hillCount + 1));
+	const ib = 101;
+	const mb = Math.floor(ib / (hillCount + 1));
+	
+	for (let i = hillCount; i > 0; i--) {
+	    let mul = ((hillCount * 2) + 1) - i;
+	    
+	    const r = ir - (mr * i);
+	    const g = ig - (mg * i);
+	    const b = ib - (mb * i);
+	    
+	    const hill = new Hill(width, height, interval * mul, `rgba(${r}, ${g}, ${b}, ${1})`);
+	    
+	    hill.draw();
+	}
+    }
+    
+    drawLineOld() {
 	const ctx = Context.get();
 	const { width, height, noise } = this.state;
-	const y = Math.floor(height / 2);
+	const y = Math.floor(height / 10) * 8;
 
 	const line = new noisyLine(0, y, width, y, 50, 1);
-	line.draw();	
+
+	ctx.beginPath();
+	line.draw();
+	ctx.lineTo(width, height);
+	ctx.lineTo(0, height);
+	ctx.lineTo(0, y);
+	//ctx.stroke();
+	ctx.fillStyle = '#ffffff';
+	ctx.fill();
+	ctx.closePath();
     }
     
     render() {

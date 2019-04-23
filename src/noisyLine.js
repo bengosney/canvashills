@@ -10,7 +10,7 @@ class noisyLine {
 	this.angle = this.getAngle(x1, y1, x2, y2);
 
 	this.noise = new Noise(this.length, [0, a], f);
-	//this.
+	this.noise2 = new Noise(this.length, [0, Math.floor(a/5)], Math.floor(f * 5));
 
 	this.x1 = x1;
 	this.y1 = y1;
@@ -47,12 +47,12 @@ class noisyLine {
     
     draw() {
 	const ctx = Context.get();
-	const { noise, x1, y1, x2, y2 } = this;
+	const { noise, noise2, x1, y1, x2, y2 } = this;
 	const y = y1;
 
 	const xOffset = Math.floor((x2 - x1) / 4);
 
-	ctx.beginPath();
+	//ctx.beginPath();
 
 	ctx.strokeStyle = '#ffffff';
 
@@ -61,7 +61,7 @@ class noisyLine {
 	ctx.moveTo(x1, y1);
 	
 	for (let x = 0 ; x <= this.length; x++) {
-	    const n = noise.get();
+	    const n = noise.get() + noise2.get();
 	    yOffset = yOffset || n;
 	    
 	    const _x = x + x1;
@@ -70,8 +70,8 @@ class noisyLine {
 	    ctx.lineTo(ax, ay);
 	}
 
-	ctx.stroke();
-	ctx.closePath();    
+	//ctx.stroke();
+	//ctx.closePath();    
     }
 }
 
