@@ -4,6 +4,7 @@ import './App.css';
 import Noise from './Noise';
 import noisyLine from './noisyLine';
 import Hill from './Hill';
+import Cloud from './Cloud';
 
 import Context from './Context';
 
@@ -97,6 +98,10 @@ class App extends Component {
     drawLine() {
 	const { width, height } = this.state;
 	const interval = Math.floor(height / 10);
+	
+	const cloud = new Cloud(0, 0, width, height);
+	cloud.draw();
+
 
 	const hillCount = 5;
 	
