@@ -102,7 +102,6 @@ class App extends Component {
 	const cloud = new Cloud(0, 0, width, height);
 	cloud.draw();
 
-
 	const hillCount = 5;
 	
 	const ir = 106;
