@@ -101,7 +101,7 @@ class App extends Component {
 	const cloud = new Cloud(0, 0, width, height);
 	cloud.draw();
 
-	const hillCount = 5;
+	const hillCount = 4;
 	
 	const ir = 106;
 	const mr = Math.floor(ir / (hillCount + 1));
@@ -111,7 +111,7 @@ class App extends Component {
 	const mb = Math.floor(ib / (hillCount + 1));
 	
 	for (let i = hillCount; i > 0; i--) {
-	    let mul = ((hillCount * 2) + 1) - i;
+	    let mul = (((hillCount * 2) + 1) - i) + 1;
 	    
 	    const r = ir - (mr * i);
 	    const g = ig - (mg * i);
