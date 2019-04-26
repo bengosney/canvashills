@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 
 import Noise from './Noise';
-import noisyLine from './noisyLine';
 import Hill from './Hill';
 import Cloud from './Cloud';
 
@@ -123,25 +122,7 @@ class App extends Component {
 	    hill.draw();
 	}
     }
-    
-    drawLineOld() {
-	const ctx = Context.get();
-	const { width, height, noise } = this.state;
-	const y = Math.floor(height / 10) * 8;
-
-	const line = new noisyLine(0, y, width, y, 50, 1);
-
-	ctx.beginPath();
-	line.draw();
-	ctx.lineTo(width, height);
-	ctx.lineTo(0, height);
-	ctx.lineTo(0, y);
-	//ctx.stroke();
-	ctx.fillStyle = '#ffffff';
-	ctx.fill();
-	ctx.closePath();
-    }
-    
+        
     render() {
 	const { width, height } = this.state;
 
