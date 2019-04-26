@@ -45,14 +45,12 @@ class noisyLine {
 	return {ax: ax, ay: ay};
     }
     
-    draw() {
+    draw(callback = null) {
 	const ctx = Context.get();
 	const { noise, noise2, x1, y1, x2, y2 } = this;
 	const y = y1;
 
 	const xOffset = Math.floor((x2 - x1) / 4);
-
-	//ctx.beginPath();
 
 	ctx.strokeStyle = '#ffffff';
 
@@ -68,10 +66,11 @@ class noisyLine {
 	    const _y = (y + n) - yOffset;
 	    const { ax, ay } = this.rotate(x1, y1, _x, _y, this.angle);
 	    ctx.lineTo(ax, ay);
-	}
 
-	//ctx.stroke();
-	//ctx.closePath();    
+	    if (callback !== null) {
+		callback(ax, ay);
+	    }
+	}
     }
 }
 
