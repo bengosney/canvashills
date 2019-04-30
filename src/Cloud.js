@@ -28,13 +28,13 @@ class Cloud {
 	const nscale = 15;
 	for (let _y = 0; _y < height ; _y++) {
 	    for (let _x = 0 ; _x < width ; _x++) {
-		const c = scale(noise.noise2D(_x / zoom, _y / zoom), [-1, 1], [0, 255]);
-		const n = scale(noise.noise2D(_x / nzoom, _y / nzoom), [-1, 1], [-nscale, nscale]);
-		const g = c + n;
-				
-		data[i+0] = scale(g, [0, 255], [data[i+0], 255]);
-		data[i+1] = scale(g, [0, 255], [data[i+1], 255]);
-		data[i+2] = scale(g, [0, 255], [data[i+2], 255]);
+		const n1 = scale(noise.noise2D(_x / zoom, _y / zoom), [-1, 1], [0, 255]);
+		const n2 = scale(noise.noise2D(_x / nzoom, _y / nzoom), [-1, 1], [-nscale, nscale]);
+		const nt = n1 + n2;
+
+		data[i+0] = scale(nt, [0, 255], [data[i+0], 255]);
+		data[i+1] = scale(nt, [0, 255], [data[i+1], 255]);
+		data[i+2] = scale(nt, [0, 255], [data[i+2], 255]);
 		
 		data[i+3] = 255;
 
