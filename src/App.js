@@ -4,6 +4,8 @@ import './App.css';
 import Noise from './Noise';
 import Hill from './Hill';
 import Cloud from './Cloud';
+import Colour from './Colour';
+import Sun from './Sun';
 
 import Context from './Context';
 
@@ -71,8 +73,8 @@ class App extends Component {
 	const { width, height } = this.state;
 	const ctx = Context.get();
 
-	const light = '#b9c3d0';
-	const dark = '#678bbb';
+	const light = '#f3d091';//'#b9c3d0';
+	const dark = '#7e818f';//'#678bbb';
 
 	const grd = ctx.createLinearGradient(0, height, 0, 0);
 	grd.addColorStop(0, light);
@@ -97,27 +99,22 @@ class App extends Component {
     drawLine() {
 	const { width, height } = this.state;
 	const interval = Math.floor(height / 10);
+
+	const sun = new Sun(300, 400, 100);
+	sun.draw();
 	
 	const cloud = new Cloud(0, 0, width, height);
 	cloud.draw();
 
 	const hillCount = 4;
-	
-	const ir = 106;
-	const mr = Math.floor(ir / (hillCount + 1));
-	const ig = 121;
-	const mg = Math.floor(ig / (hillCount + 1));
-	const ib = 101;
-	const mb = Math.floor(ib / (hillCount + 1));
-	
+
+	let colour = Colour.fromRGB(106, 121, 101);
+		
 	for (let i = hillCount; i > 0; i--) {
 	    let mul = (((hillCount * 2) + 1) - i) + 1;
 	    
-	    const r = ir - (mr * i);
-	    const g = ig - (mg * i);
-	    const b = ib - (mb * i);
-	    
-	    const hill = new Hill(width, height, interval * mul, `rgba(${r}, ${g}, ${b}, ${1})`);
+	    const hill = new Hill(width, height, interval * mul, colour);
+	    colour = colour.lighten(-10);
 	    
 	    hill.draw();
 	}
