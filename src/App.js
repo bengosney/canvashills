@@ -73,8 +73,8 @@ class App extends Component {
 	const { width, height } = this.state;
 	const ctx = Context.get();
 
-	const light = '#f3d091';//'#b9c3d0';
-	const dark = '#7e818f';//'#678bbb';
+	const light = /*'#f3d091';//*/'#b9c3d0';
+	const dark = /*'#7e818f';//*/'#678bbb';
 
 	const grd = ctx.createLinearGradient(0, height, 0, 0);
 	grd.addColorStop(0, light);
@@ -100,11 +100,11 @@ class App extends Component {
 	const { width, height } = this.state;
 	const interval = Math.floor(height / 10);
 
-	const sun = new Sun(300, 400, 100);
-	sun.draw();
-	
 	const cloud = new Cloud(0, 0, width, height);
 	cloud.draw();
+
+	const sun = new Sun(200, 200, 100);
+	sun.draw();
 
 	const hillCount = 4;
 
