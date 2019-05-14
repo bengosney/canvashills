@@ -11,8 +11,6 @@ class Sun {
 	const ctx = Context.get();
 	const { x, y, size } = this;
 
-	const rad = size / 2;
-
 	const grd = ctx.createRadialGradient(x, y, 0, x, y, size);
       
 	grd.addColorStop(0, 'rgba(255, 255, 255, 1.000)');
