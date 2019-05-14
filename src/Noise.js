@@ -1,13 +1,14 @@
 import OpenSimplexNoise from 'open-simplex-noise';
 
 class Noise {
-    constructor(length, range = [1, 100], radius = 2) {
-	this.noise = new OpenSimplexNoise(Date.now());
+    constructor(length, range = [1, 100], radius = 2, seed = null) {
+	this.noise = new OpenSimplexNoise(seed || Date.now());
 	this.length = length;
 	this.a = 0;
 	this.range = range;
 	this.r = radius;
-	this.start = 0;
+
+	this.start = null;
 	
 	this.findStart();
 	this.reset();
@@ -43,24 +44,27 @@ class Noise {
     }
 
     findStart() {
-	let prev = this.get();
-
-	let smallestAngle = Number.MAX_SAFE_INTEGER;
-	let bestStart = 0;
-
-	for (let i = 0 ; i < this.length ; i++) {
-	    const cur = this.get();
-	    const angle = Math.abs(this.angle(prev, cur));
-
-	    if (angle < smallestAngle) {
-		smallestAngle = angle;
-		bestStart = this.a  - (this.step() * 2);
+	// TODO: Make this better, I think it needs to look over more points
+	if (this.start === null) {
+	    let prev = this.get();
+	    
+	    let smallestAngle = Number.MAX_SAFE_INTEGER;
+	    let bestStart = 0;
+	    
+	    for (let i = 0 ; i < this.length ; i++) {
+		const cur = this.get();
+		const angle = Math.abs(this.angle(prev, cur));
+		
+		if (angle < smallestAngle) {
+		    smallestAngle = angle;
+		    bestStart = this.a  - (this.step() * 2);
+		}
+		
+		prev = cur;
 	    }
-
-	    prev = cur;
+	    
+	    this.start = bestStart;
 	}
-
-	this.start = bestStart;
     }
 
     get() {
