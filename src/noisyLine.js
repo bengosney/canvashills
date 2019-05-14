@@ -9,13 +9,15 @@ class noisyLine {
 	this.length = Math.abs(Math.sqrt( x*x + y*y ));
 	this.angle = this.getAngle(x1, y1, x2, y2);
 
-	this.noise = new Noise(this.length, [0, a], f);
-	this.noise2 = new Noise(this.length, [0, Math.floor(a/5)], Math.floor(f * 5));
+	this.noiseShape = new Noise(this.length, [0, a], f);
+	this.noiseDetail = new Noise(this.length, [0, Math.floor(a/5)], Math.floor(f * 5));
 
 	this.x1 = x1;
 	this.y1 = y1;
 	this.x2 = x2;
 	this.y2 = y2;
+
+	this.yOffset = null;
     }
 
     setAmplitude(amplitude) {
@@ -47,20 +49,19 @@ class noisyLine {
     
     draw(callback = null) {
 	const ctx = Context.get();
-	const { noise, noise2, x1, y1, x2, y2 } = this;
+	const { noiseShape, noiseDetail, x1, y1 } = this;
 	const y = y1;
 
-	const xOffset = Math.floor((x2 - x1) / 4);
-
 	ctx.strokeStyle = '#ffffff';
+	noiseShape.reset();
+	noiseDetail.reset();
+	ctx.moveTo(x1, y1);
 
 	let yOffset = null;
-	noise.reset();
-	ctx.moveTo(x1, y1);
 	
 	for (let x = 0 ; x <= this.length; x++) {
-	    const n = noise.get() + noise2.get();
-	    yOffset = yOffset || n;
+	    const n = noiseShape.get() + noiseDetail.get();
+	    yOffset = yOffset || n;	  
 	    
 	    const _x = x + x1;
 	    const _y = (y + n) - yOffset;
