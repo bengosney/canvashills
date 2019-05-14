@@ -33,7 +33,7 @@ class App extends Component {
     
     componentDidMount() {
 	const canvas = this.refs.canvas;
-	Context.set(canvas.getContext("2d"));
+	Context.set(canvas.getContext("2d", { alpha: false }));
 
 	
 	this.rAF = requestAnimationFrame(() => this.updateAnimationState());
@@ -47,8 +47,11 @@ class App extends Component {
 
 	const length = Math.floor(innerWidth / 2);
 	const noise = new Noise(length, [-range, range]);
-	
-	this.setState({ width: innerWidth, height: innerHeight, noise: noise, length: length }, () => this.nextFrame());
+
+	this.setState({ width: innerWidth, height: innerHeight, noise: noise, length: length }, () => {
+	    this.initObjects();
+	    this.nextFrame();
+	});
     }
     
     componentWillUnmount() {
@@ -60,9 +63,9 @@ class App extends Component {
 	this.ts = this.getTS();
 	this.clearFrame();
 
-	this.drawLine();
+	this.draw();
 		
-	//this.nextFrame();
+	this.nextFrame();
     }
 
     nextFrame() {
@@ -96,28 +99,38 @@ class App extends Component {
 	return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
     }
 
-    drawLine() {
+    initObjects() {
 	const { width, height } = this.state;
-	const interval = Math.floor(height / 10);
 
+	const renderElements = [];
+	
 	const cloud = new Cloud(0, 0, width, height);
-	cloud.draw();
+	renderElements.push(cloud);
 
-	const sun = new Sun(200, 200, 100);
-	sun.draw();
+	const sx = width / 10;
+	const sy = height / 10;
+	const sd = Math.min(sx, sy) / 2;
+	const sun = new Sun(sx, sy, sd);
+	renderElements.push(sun);
 
-	const hillCount = 4;
+	this.hillCount = 4;
+	this.hillInterval = Math.floor(height / 10);
 
 	let colour = Colour.fromRGB(106, 121, 101);
-		
-	for (let i = hillCount; i > 0; i--) {
-	    let mul = (((hillCount * 2) + 1) - i) + 1;
+	for (let i = this.hillCount; i > 0; i--) {
+	    let mul = (((this.hillCount * 2) + 1) - i) + 1;
 	    
-	    const hill = new Hill(width, height, interval * mul, colour);
+	    const hill = new Hill(width, height, this.hillInterval * mul, colour);
 	    colour = colour.lighten(-10);
-	    
-	    hill.draw();
+
+	    renderElements.push(hill);
 	}
+
+	this.renderElements = renderElements;
+    }
+
+    draw() {
+	this.renderElements.map(e => e.draw());
     }
         
     render() {
