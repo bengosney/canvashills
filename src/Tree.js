@@ -2,15 +2,21 @@ import Context from './Context';
 
 class Tree {
     constructor(x, y, size = 200, colour = '#000000', iterations = 10) {
-	this.x = x - (size / 2);
-	this.y = y;
 	this.size = size;
+	this.canvasSize = size * 10;
 	this.colour = colour;
 	this.iterations = iterations;
+
+	this.x = x - (this.canvasSize / 2);
+	this.y = y - this.canvasSize;
+
+	this.ox = x;
+	this.oy = y;
+
+	this.img = null;
     }
     
-    _draw() {
-	const ctx = Context.get();
+    _draw(ctx) {
 	const { colour } = this;
 	
 	const randomRange = (min, max) => {
@@ -20,7 +26,7 @@ class Tree {
 	const angMod = 4;
 	const branchAngleA = randomRange(-Math.PI / 3, -Math.PI / angMod);
 
-	if (colour !== null) {
+	if (colour !== null) {	    
 	    ctx.fillStyle = colour;
 	}
 	
@@ -65,15 +71,41 @@ class Tree {
 	    ctx.restore();
 	};
 
-	const { x, y, size, iterations } = this;
+	const { size, iterations, canvasSize } = this;
+	const x = (canvasSize + size) / 2;
+	const y = canvasSize;
 	tree(x, y, size, 0, iterations);
     }
 
     draw() {
-	for (let i = 0 ; i < 5; i++) {
-	    this._draw();
+	const ctx = Context.get();
+	const size = this.canvasSize;
+	
+	if (this.img === null) {	    
+	    const octx = Context.getOffscreen(size, size);
+	    for (let i = 0 ; i < 3; i++) {
+		this._draw(octx);
+	    }
+
+	    // get image from octx and render it to ctx
+	    this.img = octx.getImageData(0,0, size, size);
 	}
-    }
+
+	const { width, height } = this.img;
+	const { x, y } = this;
+	const background = ctx.getImageData(x, y, width, height);
+	const { data } = this.img;
+	for ( let i = 0 ; i < data.length ; i += 4 ) {
+	    const sum = data[i+0] + data[i+1] + data[i+2];
+	    
+	    if (sum !== 0) {
+		background.data[i+0] = data[i+0];
+		background.data[i+1] = data[i+1];
+		background.data[i+2] = data[i+2];
+	    }
+	}
+	ctx.putImageData(background, x, y);
+    }    
 }
 
 export default Tree;
