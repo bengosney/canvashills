@@ -13,7 +13,7 @@ class Colour {
 	const max = Math.max(r, g, b), min = Math.min(r, g, b);
 	let h, s, l = (max + min) / 2;
 
-	if (max == min) {
+	if (max === min) {
 	    h = s = 0; // achromatic
 	} else {
 	    const d = max - min;
@@ -23,6 +23,7 @@ class Colour {
 	    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
 	    case g: h = (b - r) / d + 2; break;
 	    case b: h = (r - g) / d + 4; break;
+	    default: break;
 	    }
 
 	    h /= 6;
@@ -69,7 +70,7 @@ class Colour {
 	const { h, s, l } = this;
 	let r, g, b;
 
-	if (s == 0) {
+	if (s === 0) {
 	    r = g = b = l; // achromatic
 	} else {
 	    function hue2rgb(p, q, t) {
