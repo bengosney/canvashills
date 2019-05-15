@@ -120,7 +120,7 @@ class App extends Component {
 	for (let i = this.hillCount; i > 0; i--) {
 	    let mul = (((this.hillCount * 2) + 1) - i) + 1;
 	    
-	    const hill = new Hill(width, height, this.hillInterval * mul, colour);
+	    const hill = new Hill(width, height, 0, this.hillInterval * mul, colour);
 	    colour = colour.lighten(-10);
 
 	    renderElements.push(hill);

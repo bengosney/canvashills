@@ -4,19 +4,20 @@ import Tree from './Tree';
 
 
 class Hill {
-    constructor(width, height, y, colour) {
+    constructor(width, height, x, y, colour) {
 	this.width = width;
 	this.height = height;
 	this.y = y;
+	this.x = x;
 	this.colour = colour;
-	this.line = new noisyLine(0, y, width, y, 50, 1);
+	this.line = new noisyLine(x, y, width + x, y, 50, 1);
 	this.trees = [];
 	this.genTrees = true;
     }
 
     draw() {
 	const ctx = Context.get();
-	const { width, height, y, colour } = this;
+	const { width, height, x, y, colour } = this;
 	const { line } = this;
 
 	ctx.beginPath();
@@ -31,9 +32,9 @@ class Hill {
 		this.trees.push(tree);
 	    }
 	});
-	ctx.lineTo(width, height);
-	ctx.lineTo(0, height);
-	ctx.lineTo(0, y);
+	ctx.lineTo(width + x, height);
+	ctx.lineTo(x, height);
+	ctx.lineTo(x, y);
 	ctx.fill();
 	ctx.closePath();
 	
